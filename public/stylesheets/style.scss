@@ -1,3 +1,60 @@
-body{
-    color:red
+:root{
+    --text-color:#02534e ;
+    --theme-color:#4ecdc4;
+
+}
+.theme-btn{
+    margin: auto 1rem;
+    border-radius: .5rem;
+    border:none;
+    padding: .8rem 2rem;
+    background-color: var(--text-color);
+    color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    font-weight: bold;
+    transition: all .3s ease;
+    &:hover{
+        background-color: var(--theme-color);
+        color:#000;
+    }
+}
+
+#user_section{
+    .container{
+        .col-lg-6{
+            h1{
+                font-size: 4rem;
+                color: var(--text-color);
+            }
+            h3{
+                color: rgb(68, 65, 65);
+            }
+
+            .img{
+                width:100% ;
+                height: auto;
+                img{
+                    width:100% ;
+                height: auto;
+                }
+            }
+        }
+    }
+}
+#user_nav{
+    .navbar-brand{
+        color: #02534e;
+        font-weight: bold;
+    }
+    .navbar-nav{
+        .nav-item{
+            .nav-link{
+                color: #02534e;
+                font-weight: bold;
+                &:hover{
+                    color: #4ecdc4;
+                }
+            }
+        }
+    }
 }

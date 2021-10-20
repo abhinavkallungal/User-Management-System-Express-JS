@@ -1,4 +1,57 @@
-body {
-  color: red;
+:root {
+  --text-color:#02534e ;
+  --theme-color:#4ecdc4;
+}
+
+.theme-btn {
+  margin: auto 1rem;
+  border-radius: .5rem;
+  border: none;
+  padding: .8rem 2rem;
+  background-color: var(--text-color);
+  color: #fff;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+          box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  font-weight: bold;
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease;
+}
+
+.theme-btn:hover {
+  background-color: var(--theme-color);
+  color: #000;
+}
+
+#user_section .container .col-lg-6 h1 {
+  font-size: 4rem;
+  color: var(--text-color);
+}
+
+#user_section .container .col-lg-6 h3 {
+  color: #444141;
+}
+
+#user_section .container .col-lg-6 .img {
+  width: 100%;
+  height: auto;
+}
+
+#user_section .container .col-lg-6 .img img {
+  width: 100%;
+  height: auto;
+}
+
+#user_nav .navbar-brand {
+  color: #02534e;
+  font-weight: bold;
+}
+
+#user_nav .navbar-nav .nav-item .nav-link {
+  color: #02534e;
+  font-weight: bold;
+}
+
+#user_nav .navbar-nav .nav-item .nav-link:hover {
+  color: #4ecdc4;
 }
 /*# sourceMappingURL=style.css.map */
