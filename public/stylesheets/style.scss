@@ -58,3 +58,41 @@
         }
     }
 }
+#user_login,#user_signup{
+    width: 100%;
+    min-height: 100vh;
+    .row{
+        height: 100%;
+
+        .card{
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+            .login{
+
+                background-color: #aeefea;
+            }
+        }
+        .img{
+            width: 100%;
+
+            img{
+                width: 100%;
+                height: auto;
+            }
+        }
+        .firm-item{
+            flex-direction: column;
+            margin: .5rem 0rem;
+            input{
+                padding: .5rem;
+                color: #02534e;
+                border: 1px solid #02534e;
+                border: none;
+                outline: none;
+                border-radius: .5rem;
+            }
+         
+        }
+       
+    }
+}
