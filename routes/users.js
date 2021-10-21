@@ -1,6 +1,5 @@
 const { response } = require('express');
 var express = require('express');
-const { checkEmail } = require('../helpers/userHelpers');
 var router = express.Router();
 const userHelpers= require('../helpers/userHelpers')
 
@@ -26,55 +25,47 @@ router.get('/signup',(req,res)=>{
 });
 
 router.post('/signup',async(req,res)=>{
-  console.log("test1");
-  let emailVerification =false;
-  email=req.body.email
-  console.log(email.trim());
+  let result={}
+  result.emailVerification =false;
+  email=req.body.email;
+
   await userHelpers.checkEmail(email).then((response)=>{
-    emailVerification=true;
-    console.log("test2");
+    result.emailVerification=response;
   }).catch((err)=>{
-    emailVerification=false;
+    result.emailVerification=err;
   })
 
-  let passwordVerification=false;
+  result.passwordVerification=false;
   password=req.body.password;
  await userHelpers.checkPassword(password).then((response)=>{
-    console.log("test3");
-    passwordVerification=true;
+    result.passwordVerification=response;
   }).catch((err)=>{
-    console.log("test4");
-      passwordVerification=false;
+     result.passwordVerification=err;
   })
 
-  let  confirmPasswordVerification=false;
 
-
-  if(passwordVerification){
-    console.log("test5");
-
+  result.confirmPasswordVerification=false;
+  if(result.passwordVerification){
     if(req.body.password===req.body.confirmPassword){
-      console.log("test6");
-      confirmPasswordVerification=true;
+      result.confirmPasswordVerification={error:false};
     }else{
-      console.log("test7");
-      confirmPasswordVerification=false;
+      result.confirmPasswordVerification={error:true,message:"The password and confirmation password do not match "};
     }
-  }else{
-    console.log("test8");
-
   }
   
-  if(emailVerification && passwordVerification && confirmPasswordVerification ){
+  if(result.emailVerification.error===false && result.passwordVerification.error===false && result.confirmPasswordVerification.error===false ){
     userHelpers.signUp(req.body).then((response)=>{
-      console.log("response",response);
-      res.redirect('/');
+      result.logedIn=response
+      console.log(result);
+      res.json(result)
     }).catch((err)=>{
-      console.log("err",err);
-      res.redirect('/signup');
+      result.logedIn=false
+      console.log(result);
+      res.json(result)
     })
   }else{
-    res.redirect('/signup')
+    console.log(result);
+    res.json(result)
 
   }
 

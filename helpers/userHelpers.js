@@ -6,8 +6,6 @@ module.exports={
     checkEmail:(email)=>{
         return new Promise ((resolve,reject)=>{
             let length=email.length;
-            let message;
-            let error;
     
             if(email==''|| length==null){
                  err={
@@ -46,30 +44,29 @@ module.exports={
             var maxNumberofChars = 16;
             var regularExpression  = /^[a-zA-Z0-9!@#$%^&*]{6,16}$/;
             if(password.length < minNumberofChars || password.length > maxNumberofChars){
+                console.log("1");
                 err={
                     message:"Your password must be at least 6 characters ",
                     error : true
                 }
                 reject(err)
-            }
-            if(!regularExpression.test(password)) {
+            }else if(!regularExpression.test(password)) {
+                console.log("2");
                 err={
-                    message:"password should contain atleast one number and one special character",
+                    message:"password should contain atleast one number or one special character",
                     error : true
                 }
                 reject(err)
             }else{
+                console.log("3");
+
                 resolve({error:false})
 
             }
         })
 
     },
-    checkConfirnPassword:(password,confirmPassword)=>{
-        return new Promise((resolve,reject)=>{
-
-        })
-    },
+  
 
 
     

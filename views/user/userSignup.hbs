@@ -13,18 +13,23 @@
                             <div class="login p-5">
 
                             <h2 class="text-center" >SIGNUP</h2>
-                            <form action="/signup" method="post">
+                            <form id="signup">
                                 <div  class="d-flex firm-item">
                                     <label for="" class="mb-1">Email</label>
-                                    <input type="email" id="email" name="email" oninput="myFunction()"  placeholder="Enter Your Email.....">
+                                    <input type="email" id="email" name="email"  placeholder="Enter Your Email.....">
+                                    <span class="msg">  </span>
                                 </div>
                                 <div class="d-flex firm-item ">
                                     <label for="" class="mb-1">Password</label>
-                                    <input type="password" name="password" value="Abhi123*" placeholder="Enter Your Password.....">
+                                    <input type="password" id="password" name="password" value="Abhi123*" placeholder="Enter Your Password.....">
+                                      <span class="msg">  </span>
+
                                 </div>
                                 <div class="d-flex firm-item ">
                                     <label for="" class="mb-1">Password</label>
-                                    <input type="password" name="confirmPassword" value="Abhi123*" placeholder="Enter Your Password.....">
+                                    <input type="password" id="confirmPassword" name="confirmPassword"  placeholder="Enter Your Password.....">
+                                    <span class="msg">  </span>
+
                                 </div>
                                 <div class="d-flex justify-content-center mt-5">
                                    <input type="submit" class="theme-btn" value="SIGNUP">
@@ -41,21 +46,66 @@
     </div>
 </section>
 <script>
-   function myFunction(){
-       let email= document.getElementById('email')
+ $(document).ready(function () {
+        $("#signup").submit(function (e) {
+            e.preventDefault();  
+            let emailFeald=document.getElementById('email');
+            let emailformControl= emailFeald.parentElement;
+            let emailmsg=emailformControl.querySelector('.msg');
+
+            let passwordFeald=document.getElementById('password');
+            let passwordformControl= passwordFeald.parentElement;
+            let passwordmsg=passwordformControl.querySelector('.msg');
+
+            let confirmPasswordFeald=document.getElementById('confirmPassword');
+            let confirmPasswordformControl= confirmPasswordFeald.parentElement;
+            let confirmPasswordmsg=confirmPasswordformControl.querySelector('.msg');
+
+            let email = $("#email").val()
+            let password = $("#password").val()
+            let confirmPassword = $("#confirmPassword").val()
+
             $.ajax({
-                url: '/checkemail',
+                url: '/signup',
                 data: {
-                    email: email.value
+                    email,password,confirmPassword
                 },
                 method: 'post',
                 success: (response) => {
-                    
+                     console.log(response)
+                     if(response.emailVerification.error || response.passwordVerification.error || response.confirmPasswordVerification.error){
+                         
+                         if(response.emailVerification.error){                            
+                            emailmsg.innerHTML=response.emailVerification.message;
+                         }else{
+                             emailmsg.innerHTML="";
+                         }
+
+                         if(response.passwordVerification.error){                            
+                            passwordmsg.innerHTML=response.passwordVerification.message;
+                         }else{
+                             passwordmsg.innerHTML="";
+                         }
+
+                         if(response.confirmPasswordVerification.error){                            
+                            confirmPasswordmsg.innerHTML=response.confirmPasswordVerification.message;
+                         }else{
+                             confirmPasswordmsg.innerHTML="";
+                         }
+
+
+                     }else{
+                        location.href = "http://localhost:3000/" 
+                     }
+                },
+                error:(response)=>{
+                    console.log(response)
                 }
+
             });
-        
-    }
-    
+        });
+      
+    });
             
     
 </script>
