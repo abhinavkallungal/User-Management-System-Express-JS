@@ -3,6 +3,11 @@
   --theme-color:#4ecdc4;
 }
 
+.msg {
+  color: red;
+  font-weight: bold;
+}
+
 .theme-btn {
   margin: auto 1rem;
   border-radius: .5rem;

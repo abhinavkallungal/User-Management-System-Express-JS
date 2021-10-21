@@ -13,7 +13,7 @@
                             <div class="login p-5">
 
                             <h2 class="text-center" >LOGIN</h2>
-                            <form action="/login" method="post">
+                            <form action="/login" method="post" id="login">
                                 <div  class="d-flex firm-item">
                                     <label for="" class="mb-3">Email</label>
                                     <input type="email" name="email" value="abhinavkallungal15@gmail.com" placeholder="Enter Your Email.....">
@@ -22,6 +22,7 @@
                                     <label for="" class="mb-3">Password</label>
                                     <input type="password"  name="password" value="Abhi123*" placeholder="Enter Your Password.....">
                                 </div>
+                                <span class="msg" id="msg"> </span>
                                 <div class="d-flex justify-content-center mt-5">
                                    <input type="submit" class="theme-btn" value="LOGIN">
                                 </div>
@@ -36,3 +37,38 @@
         </div>
     </div>
 </section>
+<script>
+ $(document).ready(function () {
+        $("#login").submit(function (e) {
+            e.preventDefault();  
+            let msg =document.getElementById('msg');
+
+            let email = $("#email").val()
+            let password = $("#password").val()
+
+            $.ajax({
+                url: '/login',
+                data: {
+                    email,password
+                },
+                method: 'post',
+                success: (response) => {
+                     if(!response.logedIn){
+                         console.log(response.message)
+                         msg.innerHTML=response.message;
+
+                     }else{
+                        location.href = "http://localhost:3000/" 
+                     }
+                },
+                error:(response)=>{
+                    console.log(response)
+                }
+
+            });
+        });
+      
+    });
+            
+    
+</script>

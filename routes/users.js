@@ -14,9 +14,9 @@ res.render('user/userLogin');
 router.post('/login',(req,res)=>{
   userHelpers.login(req.body).then((response)=>{
     req.session.user=response.user;
-    res.redirect('/');
+    res.json({logedIn:true})
   }).catch((err)=>{
-    res.redirect('/login');
+    res.json(err)
   })
 });
 

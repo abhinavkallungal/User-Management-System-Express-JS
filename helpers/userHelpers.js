@@ -90,28 +90,20 @@ module.exports={
         return new Promise(async(resolve,reject)=>{
             let user = await db.get().collection(collections.USER_COLLECTIONS)
              .findOne({ email:data.email });
-             console.log("1");
 
              if(user){
-                console.log("2");
-
-                bcrypt.compare(data.password,user.password).then((status)=>{
-                    if(status){
-                        console.log("3");
-                        resolve({status:status,user:user})
+                bcrypt.compare(data.password,user.password).then((logedIn)=>{
+                    if(logedIn){
+                        resolve({logedIn,user})
                     }else{
-                        console.log("4");
-
-                        reject({message:"Invalid Emalil or Password",status:status})
+                        reject({message:"Invalid Emalil or Password",logedIn})
                     }
                 }).catch((err)=>{
-                    console.log("err",err);
-
+                    reject({message:"Invalid Emalil or Password",logedIn:false})
                 })
              }else{
-                console.log("5");
 
-                reject({message:"Invalid Emalil or Password",status:false})
+                reject({message:"Invalid Emalil or Password",logedIn:false})
              }
         })
     }
