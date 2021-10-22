@@ -32,8 +32,8 @@ module.exports={
     
                 }else{
                     
-                    error=false;
-                    resolve(error)
+                    
+                    resolve({error:false})
                 }
             }
         })
@@ -102,9 +102,21 @@ module.exports={
                     reject({message:"Invalid Emalil or Password",logedIn:false})
                 })
              }else{
-
                 reject({message:"Invalid Emalil or Password",logedIn:false})
              }
+        })
+    },
+
+    getUsers:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let users = await db.get().collection(collections.USER_COLLECTIONS).find({}).toArray()
+            console.log("users",users);
+            if(users.length===0){
+                console.log("user test");
+                reject({message:"users not found"});
+            }else{
+                resolve(users);
+            }
         })
     }
 }

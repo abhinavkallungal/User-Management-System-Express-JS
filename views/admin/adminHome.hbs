@@ -1,3 +1,44 @@
 <section id="admin_home">
-    
+    <div class="container">
+
+        <div class="row justify-content-center mt-5">
+            <div class="col-lg-10">
+                <div class="card p-5">
+                {{#if users}}
+                <table id="table_id" class="display">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each users}}
+                        <tr>
+                            <td>{{this.email}}</td>
+                            <td>{{this.status}}</td>
+                            <td>Row 1 Data 2</td>
+                        </tr>
+                        {{/each}}
+                        <tr>
+                            <td>Row 2 Data 1</td>
+                            <td>Row 2 Data 2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                {{else}}
+                <h1>{{message.message}}</h1>
+                {{/if}}
+            </div>
+
+            </div>
+        </div>
+    </div>
 </section>
+<script>
+    $(document).ready(function () {
+        $('#table_id').DataTable();
+    });
+</script>

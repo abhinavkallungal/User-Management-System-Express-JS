@@ -1,0 +1,15 @@
+; A BIND file is a .TXT file that's used to export
+; DNS records from one domain to another. BIND
+; files are commonly used by lots of domain
+; registrars, so they're a good choice if
+; you're exporting resource records to a domain
+; that's managed by a different registrar.
+
+kaizencoworks.com. 3600 IN MX 1 aspmx.l.google.com.
+kaizencoworks.com. 3600 IN MX 5 alt1.aspmx.l.google.com.
+kaizencoworks.com. 3600 IN MX 5 alt2.aspmx.l.google.com.
+kaizencoworks.com. 3600 IN MX 10 alt3.aspmx.l.google.com.
+kaizencoworks.com. 3600 IN MX 10 alt4.aspmx.l.google.com.
+kaizencoworks.com. 3600 IN SPF "v=spf1 include:_spf.google.com ~all"
+kaizencoworks.com. 3600 IN TXT "v=spf1 include:_spf.google.com ~all"
+google._domainkey.kaizencoworks.com. 3600 IN TXT "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAthl1+3JqLlM0lgclpTEKjckkUHpwwcEZw9CBrO6laypWbtLJ8MlfNhtwmdNwT2oIA3fwOXTQiHk/4vXuhhC6pTvoYrN8uc/Aw2jmXu+i7/B6PBbT9oXibMIug2Lcgsl9NqCMKUSLl8jy96OulNiJYHry63WT3L3rQm5lYuUI3ACmN3sTvWZ2nzF1uNFf5aLOP" "Qvr47uG/XY7jmVWQyEcvf71jtyg7XQHfw63pgJn6F5JSwq3uA85NJyTalRTyqs+gJ2vbcTFRRzn3/qzyV7mqz4y/bdZ9qlCxAXpSSd3bOJiCjvWxlzXahQtvYmPNYFHEZBkB4WrUyhgQbl9414JqQIDAQAB"

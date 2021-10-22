@@ -5,7 +5,7 @@ const userHelpers= require('../helpers/userHelpers')
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-  res.render('user/userHome');
+  res.render('user/userHome',{user:true});
 });
 router.get('/login',(req,res)=>{
 res.render('user/userLogin');
@@ -14,6 +14,7 @@ res.render('user/userLogin');
 router.post('/login',(req,res)=>{
   userHelpers.login(req.body).then((response)=>{
     req.session.user=response.user;
+    console.log("logedin");
     res.json({logedIn:true})
   }).catch((err)=>{
     res.json(err)
@@ -56,6 +57,7 @@ router.post('/signup',async(req,res)=>{
   if(result.emailVerification.error===false && result.passwordVerification.error===false && result.confirmPasswordVerification.error===false ){
     userHelpers.signUp(req.body).then((response)=>{
       result.logedIn=response
+      req.session.user=req.body;
       console.log(result);
       res.json(result)
     }).catch((err)=>{
