@@ -3,7 +3,7 @@
   --theme-color:#4ecdc4;
 }
 
-.msg {
+.msg, .emailExisetMsg {
   color: red;
   font-weight: bold;
 }

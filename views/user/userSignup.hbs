@@ -18,6 +18,7 @@
                                     <label for="" class="mb-1">Email</label>
                                     <input type="email" id="email" name="email"  placeholder="Enter Your Email.....">
                                     <span class="msg">  </span>
+                                    <span class="emailExisetMsg">  </span>
                                 </div>
                                 <div class="d-flex firm-item ">
                                     <label for="" class="mb-1">Password</label>
@@ -36,6 +37,8 @@
                                 </div>
 
                             </form>
+                                 <span class="mt-4 text-center"><a href="/login">Alrody have an Account</a></span>
+
                             </div>
 
                         </div>
@@ -52,6 +55,9 @@
             let emailFeald=document.getElementById('email');
             let emailformControl= emailFeald.parentElement;
             let emailmsg=emailformControl.querySelector('.msg');
+            let emailExisetMsg=emailformControl.querySelector('.emailExisetMsg');
+
+
 
             let passwordFeald=document.getElementById('password');
             let passwordformControl= passwordFeald.parentElement;
@@ -73,12 +79,16 @@
                 method: 'post',
                 success: (response) => {
                      console.log(response)
-                     if(response.emailVerification.error || response.passwordVerification.error || response.confirmPasswordVerification.error){
-                         
+                     if(response.emailVerification.error || response.passwordVerification.error || response.confirmPasswordVerification.error || response.emailExist.error){
                          if(response.emailVerification.error){                            
                             emailmsg.innerHTML=response.emailVerification.message;
                          }else{
                              emailmsg.innerHTML="";
+                         }
+                         if(response.emailExist.error){                            
+                            emailExisetMsg.innerHTML=response.emailExist.message;
+                         }else{
+                             emailExisetMsg.innerHTML="";
                          }
 
                          if(response.passwordVerification.error){                            

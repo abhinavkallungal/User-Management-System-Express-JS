@@ -38,6 +38,7 @@ module.exports={
             }
         })
     },
+
     checkPassword:(password)=>{
         return new Promise((resolve,reject)=>{
             var minNumberofChars = 6;
@@ -53,7 +54,7 @@ module.exports={
             }else if(!regularExpression.test(password)) {
                 console.log("2");
                 err={
-                    message:"password should contain atleast one number or one special character",
+                    message:"Password should contain atleast one number or one special character",
                     error : true
                 }
                 reject(err)
@@ -66,13 +67,23 @@ module.exports={
         })
 
     },
+
+    checkEmailExist:(email)=>{
+        return new Promise ((resolve,reject)=>{
+            db.get().collection(collections.USER_COLLECTIONS).findOne({email:email}).then((response)=>{
+                if(response===null){
+                    resolve({error:false})
+                }else{
+                    reject({error:true,message:"Email alrady Exist"})
+                }
+            })
+        })
+    },
   
 
 
     
-    
     signUp:(data)=>{
-        console.log("test");
         return new Promise(async(resolve,reject)=>{
             data.password = await bcrypt.hash(data.password,10);
             console.log(data);
@@ -90,7 +101,6 @@ module.exports={
         return new Promise(async(resolve,reject)=>{
             let user = await db.get().collection(collections.USER_COLLECTIONS)
              .findOne({ email:data.email });
-
              if(user){
                 bcrypt.compare(data.password,user.password).then((logedIn)=>{
                     if(logedIn){

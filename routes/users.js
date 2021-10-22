@@ -3,32 +3,64 @@ var express = require('express');
 var router = express.Router();
 const userHelpers= require('../helpers/userHelpers')
 
+const verifyLogin = (req, res, next) => {
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');  
+  if (req.session.user) {
+   next()
+  } else {
+    res.redirect("/login");
+  }
+};
+
+const checkSession= (req, res, next) => {
+  if (req.session.user) {
+    res.redirect("/");
+  } else {
+    next()
+
+  }
+};
+
+
+
+
 /* GET users listing. */
-router.get('/', function(req, res) {
+router.get('/', verifyLogin,function(req, res) {
   res.render('user/userHome',{user:true});
 });
-router.get('/login',(req,res)=>{
+router.get('/login',checkSession,(req,res)=>{
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');  
+
 res.render('user/userLogin');
 });
 
-router.post('/login',(req,res)=>{
+
+router.post('/login',checkSession,(req,res)=>{
+  console.log("1");
   userHelpers.login(req.body).then((response)=>{
-    req.session.user=response.user;
-    console.log("logedin");
+    req.session.user = response.user;
     res.json({logedIn:true})
   }).catch((err)=>{
     res.json(err)
   })
 });
 
-router.get('/signup',(req,res)=>{
+router.get('/signup',checkSession,(req,res)=>{
   res.render('user/userSignup');
 });
 
-router.post('/signup',async(req,res)=>{
+router.post('/signup',checkSession,async(req,res)=>{
   let result={}
-  result.emailVerification =false;
   email=req.body.email;
+
+  await userHelpers.checkEmailExist(email).then((response)=>{
+    result.emailExist=response;
+    console.log(response);
+  }).catch((err)=>{
+    result.emailExist=err;
+    console.log(err);
+  })
+
 
   await userHelpers.checkEmail(email).then((response)=>{
     result.emailVerification=response;
@@ -54,15 +86,14 @@ router.post('/signup',async(req,res)=>{
     }
   }
   
-  if(result.emailVerification.error===false && result.passwordVerification.error===false && result.confirmPasswordVerification.error===false ){
+  if(result.emailVerification.error===false && result.passwordVerification.error===false && result.confirmPasswordVerification.error===false && result.emailExist.error===false){
     userHelpers.signUp(req.body).then((response)=>{
       result.logedIn=response
+      req.body.status=true;
       req.session.user=req.body;
-      console.log(result);
       res.json(result)
     }).catch((err)=>{
       result.logedIn=false
-      console.log(result);
       res.json(result)
     })
   }else{
@@ -73,10 +104,12 @@ router.post('/signup',async(req,res)=>{
 
 });
 
-router.get('/logout',(req,res)=>{
-  req.session.user=null;
+router.get('/logout',verifyLogin,(req,res)=>{
+  req.session.destroy()
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');  
   res.redirect('/login');
 })
+
 
 
 

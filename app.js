@@ -22,13 +22,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.set('trust proxy', 1) // trust first proxy
+
 app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
+  secret: "key",
+  resave: true,
   saveUninitialized: true,
-  cookie: { secure: true }
-}))
+  cookie:{maxAge:600000}
+
+}));
 
 db.connect((err)=>{
   if(err){
