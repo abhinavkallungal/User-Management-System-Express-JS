@@ -19,7 +19,10 @@
                         <tr>
                             <td>{{this.email}}</td>
                             <td>{{this.status}}</td>
-                            <td>Row 1 Data 2</td>
+                            <td><div>
+                                <a href="/admin/editUser/{{this._id}}" class="btn  btn-warning rounded me-3"><i class="fas fa-user-edit"></i></a>
+                                <a href="/admin/deleteUser/{{this._id}}" class="btn btn-danger ms-3"><i class="fas fa-trash-alt"></i></a>
+                            </div></td>
                         </tr>
                         {{/each}}
                        

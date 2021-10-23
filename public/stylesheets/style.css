@@ -60,34 +60,34 @@
   color: #4ecdc4;
 }
 
-#user_login, #user_signup {
+#user_login, #user_signup, #add_user {
   width: 100%;
   min-height: 100vh;
 }
 
-#user_login .row, #user_signup .row {
+#user_login .row, #user_signup .row, #add_user .row {
   height: 100%;
 }
 
-#user_login .row .card, #user_signup .row .card {
+#user_login .row .card, #user_signup .row .card, #add_user .row .card {
   -webkit-box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
           box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-#user_login .row .card .login, #user_signup .row .card .login {
+#user_login .row .card .login, #user_signup .row .card .login, #add_user .row .card .login {
   background-color: #aeefea;
 }
 
-#user_login .row .img, #user_signup .row .img {
+#user_login .row .img, #user_signup .row .img, #add_user .row .img {
   width: 100%;
 }
 
-#user_login .row .img img, #user_signup .row .img img {
+#user_login .row .img img, #user_signup .row .img img, #add_user .row .img img {
   width: 100%;
   height: auto;
 }
 
-#user_login .row .firm-item, #user_signup .row .firm-item {
+#user_login .row .firm-item, #user_signup .row .firm-item, #add_user .row .firm-item {
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
@@ -95,7 +95,7 @@
   margin: .5rem 0rem;
 }
 
-#user_login .row .firm-item input, #user_signup .row .firm-item input {
+#user_login .row .firm-item input, #user_signup .row .firm-item input, #add_user .row .firm-item input {
   padding: .5rem;
   color: #02534e;
   border: 1px solid #02534e;
@@ -135,5 +135,19 @@
   border: 1px solid #02534e;
   outline: none;
   border-radius: .5rem;
+}
+
+#user_edit .row {
+  min-height: 100vh;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+#user_edit .row .card {
+  background-color: #4ecdc4;
 }
 /*# sourceMappingURL=style.css.map */

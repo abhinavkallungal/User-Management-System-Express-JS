@@ -1,6 +1,7 @@
 const db= require('../config/connection');
 const collections= require('../config/collections')
 const bcrypt = require("bcrypt");
+var objectId=require('mongodb').ObjectID
  
 module.exports={
     checkEmail:(email)=>{
@@ -87,7 +88,7 @@ module.exports={
         return new Promise(async(resolve,reject)=>{
             data.password = await bcrypt.hash(data.password,10);
             console.log(data);
-            db.get().collection(collections.USER_COLLECTIONS).insertOne({email:data.email,password:data.password,status:true})
+            db.get().collection(collections.USER_COLLECTIONS).insertOne({email:data.email,password:data.password,status:"Active"})
             .then((response)=>{
                 resolve(response)
             }).catch((err)=>{
@@ -119,14 +120,45 @@ module.exports={
 
     getUsers:()=>{
         return new Promise(async(resolve,reject)=>{
-            let users = await db.get().collection(collections.USER_COLLECTIONS).find({}).toArray()
-            console.log("users",users);
+            let users = await db.get().collection(collections.USER_COLLECTIONS).find().toArray()
             if(users.length===0){
-                console.log("user test");
                 reject({message:"users not found"});
             }else{
+                console.log("test");
                 resolve(users);
             }
+        })
+    },
+    deleteUser:(id)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collections.USER_COLLECTIONS).remove({_id:objectId(id)}).then((response)=>{
+                resolve(response)
+            }).catch((err)=>{
+                reject(err);
+            })
+        })
+    },
+    getUser:(id)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collections.USER_COLLECTIONS).findOne({_id:objectId(id)}).then((user)=>{
+                resolve(user)
+            }).catch((err)=>{
+                reject(err)
+            })
+        })
+    },
+    editUser:(details)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collections.USER_COLLECTIONS).updateOne({ _id: objectId(details.id) }, {
+                $set: {
+                    email: details.email,
+                    status: details.status
+                }
+            }).then((response) => {
+                resolve(response)
+            }).catch((err)=>{
+                reject(err)
+            })
         })
     }
 }

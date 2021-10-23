@@ -62,7 +62,7 @@
         }
     }
 }
-#user_login,#user_signup{
+#user_login,#user_signup,#add_user{
     width: 100%;
     min-height: 100vh;
     .row{
@@ -122,5 +122,15 @@
             }
          
         }
+    }
+}
+#user_edit{
+    .row{
+        min-height: 100vh;
+        align-items: center;
+        justify-content: center;
+        .card{
+            background-color:#4ecdc4;
+    }
     }
 }

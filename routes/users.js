@@ -1,4 +1,3 @@
-const { response } = require('express');
 var express = require('express');
 var router = express.Router();
 const userHelpers= require('../helpers/userHelpers')
@@ -89,7 +88,7 @@ router.post('/signup',checkSession,async(req,res)=>{
   if(result.emailVerification.error===false && result.passwordVerification.error===false && result.confirmPasswordVerification.error===false && result.emailExist.error===false){
     userHelpers.signUp(req.body).then((response)=>{
       result.logedIn=response
-      req.body.status=true;
+      req.body.status="Active";
       req.session.user=req.body;
       res.json(result)
     }).catch((err)=>{
@@ -97,7 +96,6 @@ router.post('/signup',checkSession,async(req,res)=>{
       res.json(result)
     })
   }else{
-    console.log(result);
     res.json(result)
 
   }
