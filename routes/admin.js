@@ -28,16 +28,16 @@ router.get('/', verifyLogin, function(req, res){
   
   userHelpers.getUsers().then((users)=>{
     console.log("test2");
-    res.render('admin/adminHome',{admin:true,users});
+    res.render('admin/adminHome',{admin:true,users,title:" Admin  Dashboard"});
   }).catch((message)=>{
-    res.render('admin/adminHome',{admin:true,message});
+    res.render('admin/adminHome',{admin:true,message,title:" Admin  Dashboard"});
   })
 });
 
 
 
 router.get('/login',checkSession,function(req,res){
-  res.render("admin/adminLogin")
+  res.render("admin/adminLogin",{title:" Admin  Login"})
 });
 
 router.post('/login',checkSession,(req,res)=>{
@@ -61,7 +61,7 @@ router.get('/deleteUser/:id',verifyLogin,(req,res)=>{
 router.get('/editUser/:id',verifyLogin,(req,res)=>{
   let id = req.params.id
   userHelpers.getUser(id).then((userDetails)=>{
-    res.render('admin/editUser',{admin:true,userDetails});
+    res.render('admin/editUser',{admin:true,userDetails,title:" Edit User"});
   }).catch(()=>{
     res.redirect("/admin/");
   })
@@ -74,7 +74,7 @@ router.post('/editUser/',verifyLogin, (req,res)=>{
     })
 });
 router.get('/addUser',verifyLogin,(req,res)=>{
-  res.render('admin/addUser',{admin:true})
+  res.render('admin/addUser',{admin:true,title:"Add User"})
 });
 
 router.post('/addUser',verifyLogin,async(req,res)=>{

@@ -54,8 +54,13 @@
                 method: 'post',
                 success: (response) => {
                      if(!response.logedIn){
-                         console.log(response.message)
-                         msg.innerHTML=response.message;
+                         if(response.message===undefined){
+                             location.reload();
+                            msg.innerHTML="Admin Was Blocked You";
+                         }else{
+                              msg.innerHTML=response.message;
+                         }
+                         
 
                      }else{
                         location.href = "http://localhost:3000/" 

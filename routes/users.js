@@ -19,6 +19,7 @@ const verifyLogin = (req, res, next) => {
 
 const checkSession= (req, res, next) => {
   if (req.session.user) {
+    console.log("tests");
     userHelpers.checkStatus(req.session.user._id).then((user)=>{
       if(user.status==="Active"){
         res.redirect('/');
@@ -37,17 +38,20 @@ const checkSession= (req, res, next) => {
 
 /* GET users listing. */
 router.get('/', verifyLogin,function(req, res) {
-  res.render('user/userHome',{user:true});
+  res.render('user/userHome',{user:true,title:"Home Page"});
 });
+
+router.get('/test', verifyLogin,function(req, res) {
+  res.render('user/userTest',{user:true,title:"Test Page"});
+});
+
 router.get('/login',checkSession,(req,res)=>{
   res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');  
-
-res.render('user/userLogin');
+  res.render('user/userLogin',{title:"Login Page"});
 });
 
 
 router.post('/login',checkSession,(req,res)=>{
-  console.log("1");
   userHelpers.login(req.body).then((response)=>{
     req.session.user = response.user;
     res.json({logedIn:true})
@@ -57,7 +61,7 @@ router.post('/login',checkSession,(req,res)=>{
 });
 
 router.get('/signup',checkSession,(req,res)=>{
-  res.render('user/userSignup');
+  res.render('user/userSignup',{title:"Home Page"});
 });
 
 router.post('/signup',checkSession,async(req,res)=>{
