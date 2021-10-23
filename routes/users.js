@@ -5,7 +5,13 @@ const userHelpers= require('../helpers/userHelpers')
 const verifyLogin = (req, res, next) => {
   res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');  
   if (req.session.user) {
-   next()
+    userHelpers.checkStatus(req.session.user._id).then((user)=>{
+      if(user.status==="Active"){
+        next()
+      }else{
+        res.redirect("/login");
+      }
+    })
   } else {
     res.redirect("/login");
   }
@@ -13,7 +19,13 @@ const verifyLogin = (req, res, next) => {
 
 const checkSession= (req, res, next) => {
   if (req.session.user) {
-    res.redirect("/");
+    userHelpers.checkStatus(req.session.user._id).then((user)=>{
+      if(user.status==="Active"){
+        res.redirect('/');
+      }else{
+        next()
+      }
+    })
   } else {
     next()
 
@@ -54,7 +66,6 @@ router.post('/signup',checkSession,async(req,res)=>{
 
   await userHelpers.checkEmailExist(email).then((response)=>{
     result.emailExist=response;
-    console.log(response);
   }).catch((err)=>{
     result.emailExist=err;
     console.log(err);
@@ -89,6 +100,7 @@ router.post('/signup',checkSession,async(req,res)=>{
     userHelpers.signUp(req.body).then((response)=>{
       result.logedIn=response
       req.body.status="Active";
+      req.body._id=response.insertedId
       req.session.user=req.body;
       res.json(result)
     }).catch((err)=>{

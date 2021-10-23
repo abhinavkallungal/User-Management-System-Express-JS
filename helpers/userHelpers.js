@@ -160,5 +160,14 @@ module.exports={
                 reject(err)
             })
         })
+    },
+    checkStatus:(id)=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collections.USER_COLLECTIONS).findOne({_id:objectId(id)}).then((user)=>{
+                resolve(user)
+            }).catch((err)=>{
+                reject(err)
+            })
+        })
     }
 }
