@@ -16,11 +16,12 @@
                             <form action="" id="login">
                                 <div  class="d-flex firm-item">
                                     <label for="" class="mb-3">Email</label>
-                                    <input type="email" id="email" name="email" value="abhinavkallungal15@gmail.com" placeholder="Enter Your Email.....">
+                                    <input type="email" id="email" name="email" oninput="dhiden()"  placeholder="Enter Your Email.....">
+                                    <span id="email-msg" class="msg" for="email" style=""></span>
                                 </div>
                                 <div class="d-flex firm-item ">
                                     <label for="" class="mb-3">Password</label>
-                                    <input type="password" id="password"  name="password" value="Abhi123*" placeholder="Enter Your Password.....">
+                                    <input type="password" id="password"  name="password"  placeholder="Enter Your Password.....">
                                 </div>
                                 <span class="msg" id="msg"> </span>
                                 <div class="d-flex justify-content-center mt-5">
@@ -28,7 +29,11 @@
                                 </div>
 
                             </form>
+                            <div class="text-center mt-4">
+                                
                                 <span class="mt-4 text-center"><a href="/signup">Create New Account</a></span>
+                             </div>
+
                             </div>
 
                         </div>
@@ -38,13 +43,42 @@
         </div>
     </div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.js"></script>
+
 <script>
- $(document).ready(function () {
-        $("#login").submit(function (e) {
+
+    
+
+
+    $.validator.addMethod("customName", function (value, element) {
+        return this.optional(element) || /^([a-zA-Z])+([a-zA-Z])+$/.test(value);
+    }, 'Enter a valid input');
+    $("#login").validate({
+        rules: {
+            email: {
+                required: true,
+                email: true
+            },
+            password: {
+                required: true
+            }
+           
+        },
+        errorPlacement: function (error, element) {
+            if (element.is(":checkbox")) {
+                error.appendTo(element.parents(".agree"));
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        submitHandler: function (form) {
+             $("#login").submit(function (e) {
             e.preventDefault();  
-            let msg =document.getElementById('msg');
             let email = $("#email").val()
             let password = $("#password").val()
+            let emailFeald = document.getElementById('email');
+            let emailformControl = emailFeald.parentElement;
+            let msg = emailformControl.querySelector('.msg');
 
             $.ajax({
                 url: '/login',
@@ -58,6 +92,8 @@
                              location.reload();
                             msg.innerHTML="Admin Was Blocked You";
                          }else{
+                             console.log(msg)
+                             msg.style.display = "inline";
                               msg.innerHTML=response.message;
                          }
                          
@@ -72,8 +108,16 @@
 
             });
         });
-      
-    });
-            
-    
+        }
+
+    })
+
+    let emailFeald = document.getElementById('email');
+    let emailformControl = emailFeald.parentElement;
+    let emailmsg = emailformControl.querySelector('.msg');
+
+    function dhiden() {
+        emailmsg.style.display = "none";
+    }
 </script>
+

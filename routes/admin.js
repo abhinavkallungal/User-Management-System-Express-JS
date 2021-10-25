@@ -68,10 +68,24 @@ router.get('/editUser/:id',verifyLogin,(req,res)=>{
   
 });
 
-router.post('/editUser/',verifyLogin, (req,res)=>{
-    userHelpers.editUser(req.body).then(()=>{
-      res.redirect('/admin/');
-    })
+router.post('/editUser/',verifyLogin, async(req,res)=>{
+  await userHelpers.checkEmail(req.body.email).then(()=>{
+  }).catch((err)=>{ 
+    res.json(err);
+  })
+
+  userHelpers.checkEmailExist(req.body.email).then((response)=>{
+    console.log(response);
+  }).catch((err)=>{
+    res.json(err)
+  })
+
+  await userHelpers.editUser(req.body).then((response)=>{
+    res.json({edited:true})
+  }).catch((err)=>{
+    console.log(err);
+  })
+   
 });
 router.get('/addUser',verifyLogin,(req,res)=>{
   res.render('admin/addUser',{admin:true,title:"Add User"})

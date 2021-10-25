@@ -4,13 +4,17 @@ const userHelpers= require('../helpers/userHelpers')
 
 const verifyLogin = (req, res, next) => {
   res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');  
-  if (req.session.user) {
+  if (req.session.user ) {
     userHelpers.checkStatus(req.session.user._id).then((user)=>{
-      if(user.status==="Active"){
+      if(user){
+      if( user.status==="Active" && user.email===req.session.user.email){
         next()
       }else{
         res.redirect("/login");
       }
+    }else{
+      res.redirect("/login");
+    }
     })
   } else {
     res.redirect("/login");
@@ -19,13 +23,18 @@ const verifyLogin = (req, res, next) => {
 
 const checkSession= (req, res, next) => {
   if (req.session.user) {
-    console.log("tests");
     userHelpers.checkStatus(req.session.user._id).then((user)=>{
-      if(user.status==="Active"){
-        res.redirect('/');
+      if(user){
+        if(user.status==="Active" && user.email===req.session.email){
+          res.redirect('/');
+        }else{
+          next()
+        }
       }else{
         next()
+
       }
+      
     })
   } else {
     next()
@@ -52,12 +61,17 @@ router.get('/login',checkSession,(req,res)=>{
 
 
 router.post('/login',checkSession,(req,res)=>{
-  userHelpers.login(req.body).then((response)=>{
-    req.session.user = response.user;
-    res.json({logedIn:true})
+  userHelpers.checkEmail(req.body.email).then(()=>{
+    userHelpers.login(req.body).then((response)=>{
+      req.session.user = response.user;
+      res.json({logedIn:true})
+    }).catch((err)=>{
+      res.json(err)
+    })
   }).catch((err)=>{
-    res.json(err)
+    res.json({message:"Please enter a valid email address.",logedIn:false})
   })
+  
 });
 
 router.get('/signup',checkSession,(req,res)=>{
@@ -68,6 +82,12 @@ router.post('/signup',checkSession,async(req,res)=>{
   let result={}
   email=req.body.email;
 
+  await userHelpers.checkEmail(email).then((response)=>{
+    result.emailVerification=response;
+  }).catch((err)=>{
+    result.emailVerification=err;
+  })
+
   await userHelpers.checkEmailExist(email).then((response)=>{
     result.emailExist=response;
   }).catch((err)=>{
@@ -76,11 +96,7 @@ router.post('/signup',checkSession,async(req,res)=>{
   })
 
 
-  await userHelpers.checkEmail(email).then((response)=>{
-    result.emailVerification=response;
-  }).catch((err)=>{
-    result.emailVerification=err;
-  })
+
 
   result.passwordVerification=false;
   password=req.body.password;

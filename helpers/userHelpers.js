@@ -17,7 +17,6 @@ module.exports={
     
             }else if(length <4){
                  err= {
-
                     message:'invalid format',
                     error : true
                 }
@@ -26,7 +25,7 @@ module.exports={
                 var regex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
                 if(!regex.test(email)){
                     err={
-                        message:"invalid format ",
+                        message:"Please enter a valid email address.",
                         error : true
                     }
                     reject(err)
@@ -70,13 +69,16 @@ module.exports={
     },
 
     checkEmailExist:(email)=>{
-        return new Promise ((resolve,reject)=>{
-            db.get().collection(collections.USER_COLLECTIONS).findOne({email:email}).then((response)=>{
+        return new Promise (async(resolve,reject)=>{
+            await db.get().collection(collections.USER_COLLECTIONS).findOne({email:email}).then((response)=>{
+                console.log(response);
                 if(response===null){
                     resolve({error:false})
                 }else{
-                    reject({error:true,message:"Email alrady Exist"})
+                    reject({error:true,message:"Email alrady Exist",response})
                 }
+            }).catch((err)=>{
+                console.log(err);
             })
         })
     },
@@ -98,10 +100,13 @@ module.exports={
         
     },
 
-    login:(data)=>{
+           login:(data)=>{
         return new Promise(async(resolve,reject)=>{
+           
+
             let user = await db.get().collection(collections.USER_COLLECTIONS)
              .findOne({ email:data.email });
+             
              if(user){
                 bcrypt.compare(data.password,user.password).then((logedIn)=>{
                     if(logedIn){

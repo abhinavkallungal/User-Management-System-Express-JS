@@ -3,7 +3,10 @@
     --theme-color:#4ecdc4;
 
 }
-.msg,.emailExisetMsg{
+a{
+    text-decoration:  none;
+}
+.msg,.emailExisetMsg,.error{
     color: red;
     font-weight: bold;
 }
