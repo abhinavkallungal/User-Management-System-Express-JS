@@ -1,3 +1,4 @@
+var ObjectId=require('mongodb').ObjectID
 var express = require('express');
 const adminHelpers = require('../helpers/adminHelpers');
 var router = express.Router();
@@ -69,24 +70,60 @@ router.get('/editUser/:id',verifyLogin,(req,res)=>{
 });
 
 router.post('/editUser/',verifyLogin, async(req,res)=>{
+
+  let emailCheck =false;
+  let emailExistCheck =false;
+
   await userHelpers.checkEmail(req.body.email).then(()=>{
+    emailCheck=true
   }).catch((err)=>{ 
+    emailCheck=false;
     res.json(err);
+  });
+
+  await userHelpers.checkEmailExist(req.body.email).then((response)=>{
+
+    emailExistCheck=true
+
+  }).catch((err)=>{
+    console.log(req.body.id);
+    console.log(err.id.toString());
+
+    if(req.body.id === err.id.toString()){
+      emailExistCheck=true
+
+    }else{
+      emailExistCheck=false
+      res.json({
+        message:'Email already Exist',
+        error:true
+    });
+
+
+    }
+
   })
 
-  userHelpers.checkEmailExist(req.body.email).then((response)=>{
-    console.log(response);
-  }).catch((err)=>{
-    res.json(err)
-  })
+  if(emailExistCheck === true &&  emailCheck === true){
+    userHelpers.editUser(req.body).then(()=>{
+      console.log("test 3");
+      res.json({edited:true})
+    }).catch((err)=>{
+      console.log(err);
+      console.log("test 4");
+    })
+  }else{
+    res.json({
+      message:'Editing have a Problum',
+      error:true
+  });
 
-  await userHelpers.editUser(req.body).then((response)=>{
-    res.json({edited:true})
-  }).catch((err)=>{
-    console.log(err);
-  })
+
+  }
    
 });
+
+
 router.get('/addUser',verifyLogin,(req,res)=>{
   res.render('admin/addUser',{admin:true,title:"Add User"})
 });

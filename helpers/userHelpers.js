@@ -71,11 +71,10 @@ module.exports={
     checkEmailExist:(email)=>{
         return new Promise (async(resolve,reject)=>{
             await db.get().collection(collections.USER_COLLECTIONS).findOne({email:email}).then((response)=>{
-                console.log(response);
                 if(response===null){
                     resolve({error:false})
                 }else{
-                    reject({error:true,message:"Email alrady Exist",response})
+                    reject({error:true,message:"Email alrady Exist",id:response._id})
                 }
             }).catch((err)=>{
                 console.log(err);
