@@ -22,10 +22,13 @@ const verifyLogin = (req, res, next) => {
 };
 
 const checkSession= (req, res, next) => {
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');  
   if (req.session.user) {
     userHelpers.checkStatus(req.session.user._id).then((user)=>{
+
       if(user){
-        if(user.status==="Active" && user.email===req.session.email){
+
+        if(user.status==="Active" && user.email===req.session.user.email){
           res.redirect('/');
         }else{
           next()
@@ -35,10 +38,11 @@ const checkSession= (req, res, next) => {
 
       }
       
+    }).catch(()=>{
+      next()
     })
   } else {
     next()
-
   }
 };
 
@@ -55,19 +59,28 @@ router.get('/test', verifyLogin,function(req, res) {
 });
 
 router.get('/login',checkSession,(req,res)=>{
-  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');  
-  res.render('user/userLogin',{title:"Login Page"});
+ 
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');  
+    res.render('user/userLogin',{title:"Login Page"});
+  
+ 
 });
 
 
 router.post('/login',checkSession,(req,res)=>{
   userHelpers.checkEmail(req.body.email).then(()=>{
-    userHelpers.login(req.body).then((response)=>{
-      req.session.user = response.user;
-      res.json({logedIn:true})
+    userHelpers.checkBlock(req.body.email).then(()=>{
+      userHelpers.login(req.body).then((response)=>{
+        req.session.user = response.user;
+        res.json({logedIn:true})
+      }).catch((err)=>{
+        res.json(err)
+      })
+
     }).catch((err)=>{
       res.json(err)
     })
+    
   }).catch((err)=>{
     res.json({message:"Please enter a valid email address.",logedIn:false})
   })
@@ -75,7 +88,10 @@ router.post('/login',checkSession,(req,res)=>{
 });
 
 router.get('/signup',checkSession,(req,res)=>{
-  res.render('user/userSignup',{title:"Home Page"});
+
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');  
+    res.render('user/userSignup',{title:"Home Page"});
+  
 });
 
 router.post('/signup',checkSession,async(req,res)=>{
@@ -92,7 +108,6 @@ router.post('/signup',checkSession,async(req,res)=>{
     result.emailExist=response;
   }).catch((err)=>{
     result.emailExist=err;
-    console.log(err);
   })
 
 
@@ -135,7 +150,7 @@ router.post('/signup',checkSession,async(req,res)=>{
 });
 
 router.get('/logout',verifyLogin,(req,res)=>{
-  req.session.destroy()
+  req.session.user=null;
   res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');  
   res.redirect('/login');
 })

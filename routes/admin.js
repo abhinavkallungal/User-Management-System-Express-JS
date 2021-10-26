@@ -28,7 +28,6 @@ const checkSession= (req, res, next) => {
 router.get('/', verifyLogin, function(req, res){
   
   userHelpers.getUsers().then((users)=>{
-    console.log("test2");
     res.render('admin/adminHome',{admin:true,users,title:" Admin  Dashboard"});
   }).catch((message)=>{
     res.render('admin/adminHome',{admin:true,message,title:" Admin  Dashboard"});
@@ -44,7 +43,6 @@ router.get('/login',checkSession,function(req,res){
 router.post('/login',checkSession,(req,res)=>{
   adminHelpers.login(req.body).then((response)=>{
     req.session.admin=response.user;
-    console.log("logedin");
     res.json({logedIn:true})
   }).catch((err)=>{
     res.json(err)
@@ -53,7 +51,6 @@ router.post('/login',checkSession,(req,res)=>{
 
 router.get('/deleteUser/:id',verifyLogin,(req,res)=>{
     let id = req.params.id
-    console.log(id);
     userHelpers.deleteUser(id).then(()=>{
       res.redirect('/admin/')
     })
@@ -86,8 +83,6 @@ router.post('/editUser/',verifyLogin, async(req,res)=>{
     emailExistCheck=true
 
   }).catch((err)=>{
-    console.log(req.body.id);
-    console.log(err.id.toString());
 
     if(req.body.id === err.id.toString()){
       emailExistCheck=true
@@ -106,11 +101,8 @@ router.post('/editUser/',verifyLogin, async(req,res)=>{
 
   if(emailExistCheck === true &&  emailCheck === true){
     userHelpers.editUser(req.body).then(()=>{
-      console.log("test 3");
       res.json({edited:true})
     }).catch((err)=>{
-      console.log(err);
-      console.log("test 4");
     })
   }else{
     res.json({
@@ -134,10 +126,8 @@ router.post('/addUser',verifyLogin,async(req,res)=>{
 
   await userHelpers.checkEmailExist(email).then((response)=>{
     result.emailExist=response;
-    console.log(response);
   }).catch((err)=>{
     result.emailExist=err;
-    console.log(err);
   })
 
 
@@ -169,7 +159,7 @@ router.post('/addUser',verifyLogin,async(req,res)=>{
     userHelpers.signUp(req.body).then((response)=>{
       result.logedIn=response
       req.body.status="Active";
-      req.session.user=req.body;
+      req.session.admin=req.body;
       res.json(result)
     }).catch((err)=>{
       result.logedIn=false
@@ -184,7 +174,7 @@ router.post('/addUser',verifyLogin,async(req,res)=>{
 
 
 router.get('/logout',(req,res)=>{
-  req.session.destroy()
+  req.session.admin=null
   res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');  
   res.redirect('/admin/login');
 })
