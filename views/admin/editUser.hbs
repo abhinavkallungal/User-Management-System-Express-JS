@@ -31,7 +31,7 @@
                         </div>
 
 
-                        <button type="submit" class="btn btn-warning mt-5 "  onclick="return confirm('Are you sure you want to edit this user {{userDetails.email}}?');">Edit User</button>
+                        <a  class="btn btn-warning mt-5 "  onclick="editUser('{{userDetails._id}}')">Edit User</a>
                     </form>
                 </div>
             </div>
@@ -39,29 +39,32 @@
     </div>
 </section>
 
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 
 <script>
-
-    $(document).ready(function () {
-        $("#editUser").submit(function (e) {
-            e.preventDefault();
-            let emailFeald = document.getElementById('email');
+           
+    function editUser(id){
+    swal({
+        title: "Are you sure?",
+        text: "Once edit, you will not be able to recover this imaginary file!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willedit) => {
+        if(willedit) {
+             let emailFeald = document.getElementById('email');
             let emailformControl = emailFeald.parentElement;
             let emailmsg = emailformControl.querySelector('.msg');
             let emailExisetMsg = emailformControl.querySelector('.emailExisetMsg');
 
 
 
-            /*   let passwordFeald=document.getElementById('password');
-               let passwordformControl= passwordFeald.parentElement;
-               let passwordmsg=passwordformControl.querySelector('.msg');
-           */
-
-
             let email = $("#email").val()
             let status = $("#status").val()
             let id = $("#id").val()
+
 
             $.ajax({
                 url: '/admin/editUser/',
@@ -70,29 +73,36 @@
                 },
                 method: 'post',
                 success: (response) => {
-                    console.log(response)
                     if (response.edited) {
-                        location.href = 'http://localhost:3000/admin'
+                         swal("user edit!", {
+                         icon: "success",
+                       });
                     } else { 
-
-                    if (response.error) {
-                        emailmsg.innerHTML = response.message;
-                    } else {
-                        emailmsg.innerHTML = "";
-                    }
+                        if (response.error) {
+                            emailmsg.innerHTML = response.message;
+                        } else {
+                            emailmsg.innerHTML = "";
+                        }
                     
-                }
+                    }
 
-            },
+                },
                 error: (response) => {
                     console.log(response)
                 }
 
             });
-    });
-      
-    });
+        }else{
+          console.log("sdfsd")
+        }
+      })
+
+}
+   
+</script>   
 
 
 
-</script>
+
+
+
